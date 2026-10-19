@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/validation/StudentValidator.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/model/Course.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/repository/StudentTextFile.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/validation/DateValidator.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/Main.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/service/StudentManager.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/Courses.txt</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/repository/IFileHelper.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/view/Menu.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/validation/CourseValidator.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/model/Student.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/service/CourseManager.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/Students.txt</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/validation/InputValidator.java</file>
+            <file>file:/C:/Users/Lenovo/Downloads/StudentManagementSystem_fixed%20(1)/StudentManagementSystem/src/repository/CourseTextFile.java</file>
+        </group>
+    </open-files>
+</project-private>
