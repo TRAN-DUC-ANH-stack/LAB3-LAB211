@@ -14,11 +14,14 @@ import validation.DateValidator;
 import validation.InputValidator;
 import validation.StudentValidator;
 
-// Console screens of the 12 functions. No business logic here: it only reads input,
-// calls the managers and prints the result.
 public class Menu {
 
     private static final String NOT_FOUND = "Student ID does not exist!";
+
+    private final InputValidator inputValidator = new InputValidator();
+    private final StudentValidator studentValidator = new StudentValidator();
+    private final CourseValidator courseValidator = new CourseValidator();
+    private final DateValidator dateValidator = new DateValidator();
 
     private final StudentManager studentManager;
     private final CourseManager courseManager;
@@ -57,7 +60,7 @@ public class Menu {
         System.out.println("11. Save data to files");
         System.out.println("12. Quit program");
         System.out.println("=======================================================");
-        return InputValidator.readInt("Enter your choice (1-12): ", 1, 12);
+        return inputValidator.readInt("Enter your choice (1-12): ", 1, 12);
     }
 
     // ================= Function 1 =================
@@ -74,17 +77,17 @@ public class Menu {
     // ================= Function 2 =================
     public void addStudent() {
         System.out.println("--- ADD A NEW STUDENT ---");
-        String id = InputValidator.readValid("Student ID (STU0000): ", s -> {
-            String error = StudentValidator.checkId(s);
+        String id = inputValidator.readValid("Student ID (STU0000): ", s -> {
+            String error = studentValidator.checkId(s);
             if (error == null && studentManager.exists(s)) {
                 return "Student ID already exists.";
             }
             return error;
         });
-        String name = InputValidator.readValid("Full name: ", StudentValidator::checkName);
-        String major = InputValidator.readValid("Major: ", StudentValidator::checkMajor);
+        String name = inputValidator.readValid("Full name: ", studentValidator::checkName);
+        String major = inputValidator.readValid("Major: ", studentValidator::checkMajor);
         double gpa = Double.parseDouble(
-                InputValidator.readValid("GPA (0.0 - 4.0): ", StudentValidator::checkGpa));
+                inputValidator.readValid("GPA (0.0 - 4.0): ", studentValidator::checkGpa));
 
         if (studentManager.add(new Student(id, name, major, gpa))) {
             System.out.println("Student added successfully!");
@@ -95,7 +98,7 @@ public class Menu {
 
     // ================= Function 3 =================
     public void searchStudent() {
-        Student student = studentManager.findById(InputValidator.readString("Enter Student ID: "));
+        Student student = studentManager.findById(inputValidator.readString("Enter Student ID: "));
         if (student == null) {
             System.out.println(NOT_FOUND);
             return;
@@ -105,22 +108,21 @@ public class Menu {
 
     // ================= Function 4 =================
     public void updateStudent() {
-        Student student = studentManager.findById(InputValidator.readString("Enter Student ID: "));
+        Student student = studentManager.findById(inputValidator.readString("Enter Student ID: "));
         if (student == null) {
             System.out.println(NOT_FOUND);
             return;
         }
         System.out.println("Current: " + student.getId() + " | " + student.getName()
                 + " | " + student.getMajor() + " | GPA " + student.getGpa());
-        double gpa = Double.parseDouble(
-                InputValidator.readValid("New GPA (0.0 - 4.0): ", StudentValidator::checkGpa));
+        double gpa = Double.parseDouble(inputValidator.readValid("New GPA (0.0 - 4.0): ", studentValidator::checkGpa));
         studentManager.updateGpa(student.getId(), gpa);
         System.out.println("GPA updated successfully!");
     }
 
     // ================= Function 5 =================
     public void listStudentsByMajor() {
-        String major = InputValidator.readString("Enter major: ");
+        String major = inputValidator.readString("Enter major: ");
         List<Student> list = studentManager.findByMajor(major);
         if (list.isEmpty()) {
             System.out.println("No students found for major: " + major);
@@ -142,22 +144,22 @@ public class Menu {
             System.out.println(String.format("%3d. %s - %s",
                     i + 1, students.get(i).getId(), students.get(i).getName()));
         }
-        int choice = InputValidator.readInt("Choose (1-" + students.size() + "): ", 1, students.size());
+        int choice = inputValidator.readInt("Choose (1-" + students.size() + "): ", 1, students.size());
         Student student = students.get(choice - 1);
 
-        String courseId = InputValidator.readValid("Course ID: ", s -> {
-            String error = CourseValidator.checkCourseId(s);
+        String courseId = inputValidator.readValid("Course ID: ", s -> {
+            String error = courseValidator.checkCourseId(s);
             if (error == null && courseManager.exists(s)) {
                 return "Course ID already exists.";
             }
             return error;
         });
-        String name = InputValidator.readValid("Course name: ", CourseValidator::checkName);
+        String name = inputValidator.readValid("Course name: ", courseValidator::checkName);
         int weeks = Integer.parseInt(
-                InputValidator.readValid("Duration in weeks: ", CourseValidator::checkDuration));
-        String dateText = InputValidator.readValid(
-                "Start date (" + DateValidator.ACCEPTED_FORMATS + "): ", CourseValidator::checkStartDate);
-        LocalDate startDate = DateValidator.parse(dateText);
+                inputValidator.readValid("Duration in weeks: ", courseValidator::checkDuration));
+        String dateText = inputValidator.readValid(
+                "Start date (" + dateValidator.ACCEPTED_FORMATS + "): ", courseValidator::checkStartDate);
+        LocalDate startDate = dateValidator.parse(dateText);
 
         if (courseManager.add(new Course(courseId, student.getId(), name, weeks, startDate))) {
             System.out.println("Course added successfully!");
@@ -195,7 +197,7 @@ public class Menu {
 
     // ================= Function 8 =================
     public void calculateTotalDuration() {
-        Student student = studentManager.findById(InputValidator.readString("Enter Student ID: "));
+        Student student = studentManager.findById(inputValidator.readString("Enter Student ID: "));
         if (student == null) {
             System.out.println(NOT_FOUND);
             return;
@@ -207,7 +209,7 @@ public class Menu {
 
     // ================= Function 9 =================
     public void removeStudent() {
-        Student student = studentManager.findById(InputValidator.readString("Enter Student ID: "));
+        Student student = studentManager.findById(inputValidator.readString("Enter Student ID: "));
         if (student == null) {
             System.out.println(NOT_FOUND);
         } else if (courseManager.hasCoursesOf(student.getId())) {
@@ -237,10 +239,10 @@ public class Menu {
     // Returns true if the program can exit
     public boolean quit() {
         if (studentManager.isDirty() || courseManager.isDirty()) {
-            boolean save = InputValidator.readYesNo("Do you want to save the changes before exiting? (Y/N): ");
+            boolean save = inputValidator.readYesNo("Do you want to save the changes before exiting? (Y/N): ");
             if (save) {
                 if (!saveToFiles()) {
-                    boolean quitAnyway = InputValidator.readYesNo("Saving failed. Quit without saving? (Y/N): ");
+                    boolean quitAnyway = inputValidator.readYesNo("Saving failed. Quit without saving? (Y/N): ");
                     if (!quitAnyway) {
                         System.out.println("Back to the menu. Your changes are still in memory.");
                         return false;

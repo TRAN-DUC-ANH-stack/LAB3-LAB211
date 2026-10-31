@@ -13,10 +13,9 @@ import model.Course;
 import repository.IFileHelper;
 import validation.CourseValidator;
 
-// Business logic only: this class never prints. Problems are returned (boolean, null, empty list,
-// warning list, error message) and the Menu decides what to show.
 public class CourseManager {
 
+    private final CourseValidator courseValidator = new CourseValidator();
     private final Map<String, Course> courses = new LinkedHashMap<>();
     private final IFileHelper<Course> fileHelper;
     private final StudentManager studentManager; // to check that a Student ID exists
@@ -35,7 +34,6 @@ public class CourseManager {
         return new ArrayList<>(courses.values());
     }
 
-    // cse201 and CSE201 are the same course, so the ID is upper-cased before it is used as a key
     private static String key(String courseId) {
         return courseId.toUpperCase(Locale.ROOT);
     }
@@ -44,7 +42,7 @@ public class CourseManager {
         return courseId != null && courses.containsKey(key(courseId));
     }
 
-    // C - function 6: false if the course is null, Course ID is duplicated or Student ID does not exist
+    // C - function 6: 
     public boolean add(Course course) {
         if (course == null || exists(course.getCourseId()) || !studentManager.exists(course.getStudentId())) {
             return false;
@@ -54,7 +52,7 @@ public class CourseManager {
         return true;
     }
 
-    // RF - function 7: all courses of one student (empty list if none or if the ID is null)
+    // RF - function 7: 
     public List<Course> findByStudent(String studentId) {
         List<Course> result = new ArrayList<>();
         if (studentId == null) {
@@ -68,12 +66,12 @@ public class CourseManager {
         return result;
     }
 
-    // Function 9: a student with courses cannot be deleted
+    // Function 9: 
     public boolean hasCoursesOf(String studentId) {
         return !findByStudent(studentId).isEmpty();
     }
 
-    // Function 8: total weeks of all courses of one student
+    // Function 8: 
     public int totalDurationOf(String studentId) {
         int total = 0;
         for (Course c : findByStudent(studentId)) {
@@ -82,9 +80,7 @@ public class CourseManager {
         return total;
     }
 
-    // RF' - split one line of Courses.txt into a Course, null if the line is null or invalid.
-    // Expected: CourseID, StudentID, CourseName, Weeks, dd/MM/yyyy (exactly 5 fields).
-    // The "future date" rule is not checked here because old courses may already have started.
+    // RF' 
     public static Course parseLine(String line) {
         if (line == null) {
             return null;
@@ -98,7 +94,8 @@ public class CourseManager {
         String name = p[2].trim();
         String weeks = p[3].trim();
         String date = p[4].trim();
-        if (CourseValidator.firstError(courseId, studentId, name, weeks) != null) {
+        CourseValidator courseValidator = new CourseValidator();
+        if (courseValidator.firstError(courseId, studentId, name, weeks) != null) {
             return null;
         }
         try {
@@ -109,8 +106,7 @@ public class CourseManager {
         }
     }
 
-    // L - call studentManager.load() first. Skips duplicated Course IDs and unknown students.
-    // Returns the warnings (skipped lines / duplicates) for the Menu to display.
+    // L 
     public List<String> load() throws IOException {
         List<String> warnings = new ArrayList<>();
         List<Course> loaded = Objects.requireNonNull(fileHelper.load(warnings), "Loaded data must not be null.");
@@ -131,10 +127,10 @@ public class CourseManager {
 
     public String validateForSave() {
         int position = 0;
-        for (Course c : courses.values()) { // a Map cannot hold two courses with the same ID
+        for (Course c : courses.values()) {
             position++;
             String where = "Invalid course at position " + position + " (" + c.getCourseId() + "): ";
-            String error = CourseValidator.firstError(c.getCourseId(), c.getStudentId(),
+            String error = courseValidator.firstError(c.getCourseId(), c.getStudentId(),
                     c.getCourseName(), String.valueOf(c.getDurationWeeks()));
             if (error != null) {
                 return where + error;
@@ -146,7 +142,7 @@ public class CourseManager {
         return null;
     }
 
-    // S - nothing is written unless all the data is valid (the Menu calls validateForSave() first)
+    // S 
     public void save() throws IOException {
         String error = validateForSave();
         if (error != null) {

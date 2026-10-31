@@ -15,12 +15,12 @@ public class StudentTextFile implements IFileHelper<Student> {
 
     private final Path path;
 
+    private final StudentValidator studentValidator = new StudentValidator();
+
     public StudentTextFile(String filePath) {
         this.path = Paths.get(Objects.requireNonNull(filePath, "File path must not be null."));
     }
 
-    // Line format: <ID>, <Name>, <Major>, <GPA>
-    // Invalid lines are skipped and reported in warnings (this class never prints).
     @Override
     public List<Student> load(List<String> warnings) throws IOException {
         Objects.requireNonNull(warnings, "Warning list must not be null.");
@@ -52,7 +52,6 @@ public class StudentTextFile implements IFileHelper<Student> {
         Files.write(path, lines, StandardCharsets.UTF_8);
     }
 
-    // Returns null if the line breaks any Student constraint
     private Student parseLine(String line) {
         String[] p = line.split(",", -1);
         if (p.length != 4) {
@@ -62,7 +61,7 @@ public class StudentTextFile implements IFileHelper<Student> {
         String name = p[1].trim();
         String major = p[2].trim();
         String gpa = p[3].trim();
-        if (!StudentValidator.isValid(id, name, major, gpa)) {
+        if (!studentValidator.isValid(id, name, major, gpa)) {
             return null;
         }
         return new Student(id, name, major, Double.parseDouble(gpa));

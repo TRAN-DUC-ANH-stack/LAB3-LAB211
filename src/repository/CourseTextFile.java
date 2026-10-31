@@ -21,8 +21,6 @@ public class CourseTextFile implements IFileHelper<Course> {
         this.parser = Objects.requireNonNull(parser, "Line parser must not be null.");
     }
 
-    // Line format: <Course ID>, <Student ID>, <Course Name>, <Weeks>, <dd/MM/yyyy>
-    // Invalid lines are skipped and reported in warnings (this class never prints).
     @Override
     public List<Course> load(List<String> warnings) throws IOException {
         Objects.requireNonNull(warnings, "Warning list must not be null.");
